@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework',
     'djoser',
+    'core.apps.CoreConfig'
 ]
 
 MIDDLEWARE = [
@@ -100,6 +101,8 @@ MEDIA_ROOT = '/media/'
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = "users.User"
 
 
 REST_FRAMEWORK = {
