@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = True
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = os.getenv("SECRET_KEY")
 # DEBUG = os.getenv('DEBUG', True)
 ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
@@ -20,7 +20,10 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework',
     'djoser',
-    'core.apps.CoreConfig'
+    'api',
+    'core',
+    'recipes',
+    'users',
 ]
 
 MIDDLEWARE = [
