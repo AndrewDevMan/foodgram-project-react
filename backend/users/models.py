@@ -1,5 +1,8 @@
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import RegexValidator
 from django.db import models
+
+from core.constants import Limit
 
 
 class User(AbstractUser):
@@ -9,36 +12,42 @@ class User(AbstractUser):
         "last_name",
     ]
 
-    username = models.SlugField(
+    username = models.CharField(
         "Имя пользователя",
-        max_length=150,
+        max_length=Limit.CHAR_LIMIT_USER_USERNAME,
         blank=False,
         unique=True,
+        validators=[RegexValidator(
+            regex=r"^[\w.@+-]+\Z",
+            message="Можно использовать буквы латинского алфавита, цифры и "
+                    "символы: '.', '@', '_', '-', '+'.",
+            code="Invalide username",
+        )]
     )
     email = models.EmailField(
         "Эл. почта",
-        max_length=254,
+        max_length=Limit.CHAR_LIMIT_USER_EMAIL,
         blank=False,
         unique=True,
     )
     first_name = models.CharField(
         "Имя",
-        max_length=150,
+        max_length=Limit.CHAR_LIMIT_USER_FIRST_NAME,
         blank=False,
     )
     last_name = models.CharField(
         "Фамилия",
-        max_length=150,
+        max_length=Limit.CHAR_LIMIT_USER_LAST_NAME,
         blank=False,
     )
     password = models.CharField(
         "Пароль",
-        max_length=150,
+        max_length=Limit.CHAR_LIMIT_USER_PASSWORD,
         blank=False,
     )
 
     class Meta:
-        ordering = ["username"]
+        ordering = ["-id"]
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
 
@@ -47,7 +56,6 @@ class User(AbstractUser):
 
 
 class Follow(models.Model):
-
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -63,9 +71,9 @@ class Follow(models.Model):
 
     class Meta:
         constraints = [models.UniqueConstraint(
-                fields=["user", "author"],
-                name="unique_user_author",
-            )]
+            fields=["user", "author"],
+            name="unique_user_author",
+        )]
         verbose_name = "Подписка"
         verbose_name_plural = "Подписки"
 
