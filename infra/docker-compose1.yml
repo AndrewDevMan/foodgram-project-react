@@ -1,38 +1,38 @@
-version: '3'
+version: "3.9"
 
 volumes:
-  pg_data:
+  pg-foodgram:
   static:
   media:
 
 services:
-  db:
-    image: postgres:13.10
+  food-db:
+    image: postgres:13.14-alpine
     env_file: ../.env
     restart: on-failure
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - pg-foodgram:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
 
-  backend:
-    build:
-      context: ../backend/
-      dockerfile: Dockerfile
+  food-backend:
+    build: ../backend/
     env_file: ../.env
     restart: on-failure
     volumes:
       - static:/backend_static/
       - media:/media/
 
-  frontend:
-    env_file: ../.env
+  food-frontend:
     build:
       context: ../frontend
       dockerfile: Dockerfile
+    env_file: ../.env
     restart: on-failure
     volumes:
-      - static:/static
+      - static:/app/result_build/
 
-  gateway:
+  food-nginx:
     depends_on: [food-backend, food-frontend, food-db]
     image: nginx:1.22.1
     env_file: ../.env
@@ -40,5 +40,6 @@ services:
     ports:
       - "80:80"
     volumes:
-      - static:/static
-      - media:/media
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ../frontend/build:/usr/share/nginx/html/
+      - ../docs/:/usr/share/nginx/html/api/docs/

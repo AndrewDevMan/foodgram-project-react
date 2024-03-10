@@ -3,9 +3,17 @@ from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 
 from core.constants import Limit
-from core.models import BaseMetaModel
 
 User = get_user_model()
+
+
+class BaseMetaModel(models.Model):
+    """Абстрактная базовая модель"""
+
+    class Meta:
+        abstract = True
+        ordering = ["-id"]
+        default_related_name = "%(class)ss"
 
 
 class Tag(models.Model):
@@ -21,6 +29,7 @@ class Tag(models.Model):
     )
     color = models.CharField(
         "Цвет в HEX",
+        help_text="Пример: #A7F300",
         max_length=Limit.CHAR_LIMIT_TAG_HEX_COLOR,
         validators=[RegexValidator(
             regex=r"^#[A-Fa-f0-9]{6}$",

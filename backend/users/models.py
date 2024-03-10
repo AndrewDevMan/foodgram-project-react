@@ -7,10 +7,11 @@ from core.constants import Limit
 
 class User(AbstractUser):
     REQUIRED_FIELDS = [
-        "email",
+        "username",
         "first_name",
         "last_name",
     ]
+    USERNAME_FIELD = "email"
 
     username = models.CharField(
         "Имя пользователя",
