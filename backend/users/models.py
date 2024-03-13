@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 from django.db import models
 
-from core.constants import Limit
+from users.constants import Limit
 
 
 class User(AbstractUser):
@@ -53,7 +53,7 @@ class User(AbstractUser):
         verbose_name_plural = "Пользователи"
 
     def __str__(self):
-        return self.username
+        return self.username[:Limit.VISUAL_CHAR]
 
 
 class Follow(models.Model):

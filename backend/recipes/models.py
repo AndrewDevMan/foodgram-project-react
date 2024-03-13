@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 
-from core.constants import Limit
+from recipes.constants import Limit
 
 User = get_user_model()
 
@@ -43,7 +43,7 @@ class Tag(models.Model):
         verbose_name_plural = "Теги"
 
     def __str__(self):
-        return self.name
+        return self.name[:Limit.VISUAL_CHAR]
 
 
 class Ingredient(models.Model):
@@ -61,7 +61,8 @@ class Ingredient(models.Model):
         verbose_name_plural = "Ингридиенты"
 
     def __str__(self):
-        return f"{self.name}, {self.measurement_unit}"
+        return (f"{self.name[:Limit.VISUAL_CHAR]},"
+                f"{self.measurement_unit[:Limit.VISUAL_CHAR]}")
 
 
 class Recipe(models.Model):
@@ -102,7 +103,7 @@ class Recipe(models.Model):
         verbose_name_plural = "Рецепты"
 
     def __str__(self):
-        return self.title
+        return self.title[:Limit.VISUAL_CHAR]
 
 
 class RecipeIngredient(models.Model):
@@ -132,8 +133,9 @@ class RecipeIngredient(models.Model):
 
     def __str__(self):
         return (
-            f"{self.ingredient.name} "
-            f"{self.ingredient.measurement_unit} - {self.amount}"
+            f"{self.ingredient.name[:Limit.VISUAL_CHAR]} "
+            f"{self.ingredient.measurement_unit[:Limit.VISUAL_CHAR]} "
+            f"- {self.amount[:Limit.VISUAL_CHAR]}"
         )
 
 
