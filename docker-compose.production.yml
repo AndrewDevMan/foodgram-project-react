@@ -16,7 +16,7 @@ services:
       - ./.env
 
   food-backend:
-    image: andrewdevman/foodgram_backend
+    image: andrewdevman/foodgram_backend:latest
     restart: on-failure
     volumes:
       - food-static:/app/static/
@@ -27,7 +27,7 @@ services:
       - ./.env
 
   food-frontend:
-    image: andrewdevman/foodgram_frontend
+    image: andrewdevman/foodgram_frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
