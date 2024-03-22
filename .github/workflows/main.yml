@@ -94,7 +94,7 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
-          source: "docker-compose.production.yml, infra/*, docs/*, ./frontend/build/*"
+          source: "docker-compose.production.yml, infra/*, docs/*, frontend/build/*"
           target: foodgram
       - name: Executing remote ssh commands to deploy
         uses: appleboy/ssh-action@master
@@ -109,7 +109,7 @@ jobs:
             sudo docker compose -f docker-compose.production.yml down
             sudo docker compose -f docker-compose.production.yml up -d
             sudo docker compose -f docker-compose.production.yml exec food-backend python manage.py migrate
-            sudo docker compose -f docker-compose.production.yml exec food-backend python manage.py collectstatic
+            sudo docker compose -f docker-compose.production.yml exec food-backend python manage.py collectstatic --noinput
 
   send_message:
     runs-on: ubuntu-latest
