@@ -105,11 +105,11 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
             cd foodgram
-            sudo docker compose -f docker-compose.production.yml pull
-            sudo docker compose -f docker-compose.production.yml down
-            sudo docker compose -f docker-compose.production.yml up -d
-            sudo docker compose exec food-backend python manage.py migrate
-            sudo docker compose exec food-backend python manage.py collectstatic
+            sudo docker compose -f infra/docker-compose.production.yml pull
+            sudo docker compose -f infra/docker-compose.production.yml down
+            sudo docker compose -f infra/docker-compose.production.yml up -d
+            sudo docker compose exec infra/food-backend python manage.py migrate
+            sudo docker compose exec infra/food-backend python manage.py collectstatic
 
   send_message:
     runs-on: ubuntu-latest
