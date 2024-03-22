@@ -36,6 +36,9 @@
    ```
 4. Запушить для диплоя
 
+## 158.160.64.213
+Сайт доступен по адресу
+
 ## Об авторе
 Андрей Тетнёв - ученик Яндекс.Практикума  
 [GitHub](https://github.com/AndrewDevMan/) | [E-mail](mailto:andreytetnev@yandex.ru)
