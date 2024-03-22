@@ -1,14 +1,13 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 from drf_extra_fields.fields import Base64ImageField
+from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
+                            ShoppingList, Tag)
 from rest_framework.exceptions import ValidationError
 from rest_framework.serializers import (CharField, CurrentUserDefault,
                                         IntegerField, ModelSerializer,
                                         PrimaryKeyRelatedField,
                                         SerializerMethodField)
-
-from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
-                            ShoppingList, Tag)
 from users.models import Follow
 from users.serializers import CustomUserSerializer
 
