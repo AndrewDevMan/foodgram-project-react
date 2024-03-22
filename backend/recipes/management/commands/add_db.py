@@ -1,7 +1,6 @@
 from csv import reader
 
 from django.core.management.base import BaseCommand
-
 from foodgram.settings import BASE_DIR
 from recipes.models import Ingredient
 
@@ -27,7 +26,7 @@ class Command(BaseCommand):
                     )
                 except ValueError:
                     print(f"Данные {row[0]}, {row[1]} ",
-                          f"не валидны и добавлены не будут")
+                          "не валидны и добавлены не будут")
                     continue
         self.stdout.write("Ингридиенты успешно добавлены.")
 

@@ -18,6 +18,7 @@ User = get_user_model()
 
 
 class CustomUserViewSet(UserViewSet):
+    """Отображение пользователей"""
     queryset = User.objects.all()
     serializer_class = CustomUserSerializer
     pagination_class = LimitPagination
@@ -50,9 +51,10 @@ class CustomUserViewSet(UserViewSet):
     def subscribe(self, request, pk):
         author = get_object_or_404(User, pk=pk)
 
-        serializer = FollowSerializer(author,
-                                      data=request.data,
-                                      context={'request': request})
+        serializer = FollowSerializer(
+            instance=author,
+            data=request.data,
+            context={"request": request})
         serializer.is_valid(raise_exception=True)
         Follow.objects.create(user=request.user, author=author)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
