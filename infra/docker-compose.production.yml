@@ -1,0 +1,49 @@
+version: '3.9'
+
+volumes:
+  food-postgres:
+  food-static:
+  food-media:
+
+services:
+
+  food-db:
+    image: postgres:13.12
+    restart: on-failure
+    volumes:
+      - food-postgres:/var/lib/postgresql/data/
+    env_file:
+      - ../.env
+
+  food-backend:
+    image: andrewdevman/foodgram_backend
+    restart: on-failure
+    volumes:
+      - food-static:/app/static/
+      - food-media:/app/media/
+    depends_on:
+      - food-db
+    env_file:
+      - ../.env
+
+  food-frontend:
+    build: andrewdevman/foodgram_frontend
+    volumes:
+      - ../frontend/:/app/result_build/
+    depends_on:
+      - food-backend
+
+  food-nginx:
+    image: nginx:latest
+    restart: on-failure
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ../frontend/build:/usr/share/nginx/html/
+      - ../docs/:/usr/share/nginx/html/api/docs/
+
+      - food-static:/var/html/static/
+      - food-media:/var/html/media/
+    depends_on:
+      - food-frontend
