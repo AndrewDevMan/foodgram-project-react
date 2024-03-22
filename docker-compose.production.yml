@@ -27,7 +27,7 @@ services:
       - ../.env
 
   food-frontend:
-    build: andrewdevman/foodgram_frontend
+    image: andrewdevman/foodgram_frontend
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
