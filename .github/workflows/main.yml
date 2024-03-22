@@ -36,7 +36,7 @@ jobs:
         DB_HOST: 127.0.0.1
         DB_PORT: 5432
       run: |
-
+        python -m flake8 backend/
 
   build_and_push_backend_to_docker_hub:
     name: Push Docker image to DockerHub
@@ -94,8 +94,8 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
-          source: "./infra/docker-compose.production.yml"
-          target: "~/foodgram"
+          source: "docker-compose.production.yml"
+          target: "foodgram"
       - name: Executing remote ssh commands to deploy
         uses: appleboy/ssh-action@master
         with:
