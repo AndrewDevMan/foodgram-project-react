@@ -1,5 +1,5 @@
 class Limit:
-    """Настройка констант моделей"""
+    """Настройка констант User"""
 
     # Модель User
     CHAR_LIMIT_USER_USERNAME = 150
@@ -9,3 +9,6 @@ class Limit:
     CHAR_LIMIT_USER_PASSWORD = 150
 
     VISUAL_CHAR = 32
+
+    # Пагинация
+    PAGINATION_PAGE_SIZE = 6

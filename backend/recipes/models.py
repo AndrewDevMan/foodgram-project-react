@@ -39,6 +39,7 @@ class Tag(models.Model):
     )
 
     class Meta(BaseMetaModel.Meta):
+        ordering = ["id"]
         verbose_name = "Тег"
         verbose_name_plural = "Теги"
 
@@ -57,8 +58,8 @@ class Ingredient(models.Model):
     )
 
     class Meta(BaseMetaModel.Meta):
-        verbose_name = "Ингридиент"
-        verbose_name_plural = "Ингридиенты"
+        verbose_name = "Ингредиент"
+        verbose_name_plural = "Ингредиенты"
 
     def __str__(self):
         return (f"{self.name[:Limit.VISUAL_CHAR]},"
@@ -72,24 +73,26 @@ class Recipe(models.Model):
         null=True,
         verbose_name="Автор",
     )
-    title = models.CharField(
+    name = models.CharField(
         "Название рецепта",
-        max_length=Limit.CHAR_LIMIT_RECIPE_TITLE,
+        max_length=Limit.CHAR_LIMIT_RECIPE_NAME,
     )
     image = models.ImageField(
-        upload_to="recipe_images",
+        "Изображение рецепта",
+        upload_to="recipes/",
     )
-    text = models.TextField("Описание")
-    ingredient = models.ManyToManyField(
+    text = models.TextField("Инструкция по приготовлению")
+    ingredients = models.ManyToManyField(
         Ingredient,
         through="RecipeIngredient",
-        verbose_name="Ингридиенты",
+        verbose_name="Ингредиенты",
     )
-    tag = models.ManyToManyField(
+    tags = models.ManyToManyField(
         Tag,
         verbose_name="Тег",
+        related_name="recipes"
     )
-    time = models.PositiveSmallIntegerField(
+    cooking_time = models.PositiveSmallIntegerField(
         "Время готовки, мин.",
         validators=[MinValueValidator(
             limit_value=Limit.MIN_VALUE_RECIPE_TIME_COOKING,
@@ -98,25 +101,27 @@ class Recipe(models.Model):
         )]
     )
 
-    class Meta(BaseMetaModel.Meta):
+    class Meta:
+        ordering = ["-id"]
         verbose_name = "Рецепт"
         verbose_name_plural = "Рецепты"
 
     def __str__(self):
-        return self.title[:Limit.VISUAL_CHAR]
+        return self.name[:Limit.VISUAL_CHAR]
 
 
 class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name="ingredients",
+        related_name="recipe",
         verbose_name="Рецепт",
     )
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
         verbose_name="Ингридиент",
+        related_name="ingredient",
     )
     amount = models.PositiveSmallIntegerField(
         "Колличество",
@@ -127,7 +132,8 @@ class RecipeIngredient(models.Model):
         )]
     )
 
-    class Meta(BaseMetaModel.Meta):
+    class Meta:
+        ordering = ["-id"]
         verbose_name = "Ингредиент в рецепте"
         verbose_name_plural = "Ингредиенты в рецептах"
 
@@ -135,7 +141,7 @@ class RecipeIngredient(models.Model):
         return (
             f"{self.ingredient.name[:Limit.VISUAL_CHAR]} "
             f"{self.ingredient.measurement_unit[:Limit.VISUAL_CHAR]} "
-            f"- {self.amount[:Limit.VISUAL_CHAR]}"
+            f"- {self.amount}"
         )
 
 
@@ -177,8 +183,8 @@ class ShoppingList(models.Model):
     )
 
     class Meta(BaseMetaModel.Meta):
-        verbose_name = "Избранное"
-        verbose_name_plural = "Избранное"
+        verbose_name = "Корзина"
+        verbose_name_plural = "Корзина"
         constraints = [
             models.UniqueConstraint(
                 fields=["recipe", "user"],

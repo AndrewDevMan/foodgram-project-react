@@ -1,5 +1,5 @@
 class Limit:
-    """Настройка констант моделей"""
+    """Настройка констант Recipes"""
 
     # Модель Tag
     CHAR_LIMIT_TAG_NAME = 32
@@ -11,7 +11,7 @@ class Limit:
     CHAR_LIMIT_INGREDIENT_MEASUREMENT_UNIT = 32
 
     # Модель Recipe
-    CHAR_LIMIT_RECIPE_TITLE = 255
+    CHAR_LIMIT_RECIPE_NAME = 200
     MIN_VALUE_RECIPE_TIME_COOKING = 1
 
     # Модель RecipeIngredient
