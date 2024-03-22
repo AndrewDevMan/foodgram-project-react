@@ -94,8 +94,8 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
-          source: "docker-compose.production.yml"
-          target: "foodgram"
+          source: "infra/docker-compose.production.yml"
+          target: "foodgram/docker-compose.production.yml"
       - name: Executing remote ssh commands to deploy
         uses: appleboy/ssh-action@master
         with:
