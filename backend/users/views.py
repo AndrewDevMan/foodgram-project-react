@@ -11,8 +11,7 @@ from rest_framework.views import Response
 from api.serializers import FollowSerializer
 from users.models import Follow
 from users.paginations import LimitPagination
-from users.serializers import (CustomUserSerializer,
-                               CustomCreateUserSerializer)
+from users.serializers import CustomCreateUserSerializer, CustomUserSerializer
 
 User = get_user_model()
 
