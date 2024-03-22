@@ -1,0 +1,13 @@
+version: "3.9"
+
+volumes:
+  pg-foodgram:
+
+services:
+  db:
+    image: postgres:14.11
+    env_file: ../.env
+    volumes:
+      - pg-foodgram:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
