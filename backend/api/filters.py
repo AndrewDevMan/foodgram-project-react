@@ -3,9 +3,8 @@ from django_filters.rest_framework.filters import (BooleanFilter,
                                                    ModelChoiceFilter,
                                                    ModelMultipleChoiceFilter)
 from django_filters.rest_framework.filterset import FilterSet
-from rest_framework.filters import SearchFilter
-
 from recipes.models import Recipe, Tag
+from rest_framework.filters import SearchFilter
 
 User = get_user_model()
 
