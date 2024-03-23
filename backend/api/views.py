@@ -1,21 +1,22 @@
 from datetime import datetime as dt
 
+from django.core.exceptions import ObjectDoesNotExist
+from django.db.models.aggregates import Sum
+from django.shortcuts import HttpResponse
+from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
+from rest_framework.views import Response, status
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+
 from api.filters import IngredientFilter, RecipeFilter
 from api.paginations import LimitPagination
 from api.permissions import AuthorOrReadOnly
 from api.serializers import (IngredientSerializer, RecipeCreateSerializer,
                              RecipeInFavoriteSerializer, RecipeReadSerializer,
                              TagSerializer)
-from django.core.exceptions import ObjectDoesNotExist
-from django.db.models.aggregates import Sum
-from django.shortcuts import HttpResponse
 from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
                             ShoppingList, Tag)
-from rest_framework.decorators import action
-from rest_framework.exceptions import ValidationError
-from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
-from rest_framework.views import Response, status
-from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):
@@ -107,25 +108,34 @@ class RecipeViewSet(ModelViewSet):
         user = request.user
         if not user.shoppinglists.exists():
             return Response(status=status.HTTP_400_BAD_REQUEST)
-
+        clear_ingredients = {}
         ingredients = RecipeIngredient.objects.filter(
             recipe__shoppinglists__user=user.id
         ).values(
             "ingredient__name",
             "ingredient__measurement_unit"
-        ).annotate(amount=Sum('amount'))
+        ).annotate(amount=Sum("amount"))
+
+        for ingredient in ingredients:
+            if ingredient["ingredient__name"] not in clear_ingredients:
+                clear_ingredients[ingredient["ingredient__name"]] = {
+                    "unit": ingredient["ingredient__measurement_unit"],
+                    "amount": ingredient["amount"],
+                }
+            else:
+                clear_ingredients[ingredient["ingredient__name"]]["amount"] +=\
+                    ingredient["amount"]
 
         today = dt.today()
         shoplist = f"Список покупок на {today:%d %B %Y}\n\n"
         shoplist += "\n".join(
-            [f"* {ingredient['ingredient__name']} --- "
-             f"{ingredient['amount']}, "
-             f"{ingredient['ingredient__measurement_unit']}"
-             for ingredient in ingredients]
+            [f"- {name} --- {clear_ingredients[name]['amount']}, "
+             f"{clear_ingredients[name]['unit']}"
+             for name in clear_ingredients]
         )
 
-        file = f"shopping_list_{today:%d%m%y}"
-        response = HttpResponse(shoplist, content_type="text/*")
-        response["Content-Disposition"] = f"attachment; filename={file}.txt"
+        file = f'shopping_list_{today:%d%m%y}.txt'
+        response = HttpResponse(shoplist, content_type="text/plain")
+        response["Content-Disposition"] = f"attachment; filename={file}"
 
         return response
