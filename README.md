@@ -9,10 +9,8 @@
     - Django REST Framework 3.14
     - Django 3.2
     - djoser 2.1.0
-    - Docker
-    - PostgreSQL
-    - nginx
-    - gunicorn
+    - PostgreSQL 13.12
+    - gunicorn 20.1.0
     - CI/CD GitHub Actions
 
 ## Как установить
@@ -34,10 +32,21 @@
    TELEGRAM_TO='ид учетки телеграмма'
    TELEGRAM_TOKEN='Токен бота'
    ```
-4. Запушить для диплоя
+4. Запушить для деплоя\
+   `git push`
+5. Применить миграции\
+   `cd infra/`
+   `make migrate`
+6. Наполнить бд\
+   `make add_db` 
+7. Создать СуперПользователя\
+   `make su`
 
 ## Проект доступен по адресу
-   `http://158.160.64.213/`
+   `http://158.160.64.213/` 
+
+## Документаци API доступна по адресу
+   `http://158.160.64.213/api/docs/`
 
 ## Об авторе
 Андрей Тетнёв - ученик Яндекс.Практикума  

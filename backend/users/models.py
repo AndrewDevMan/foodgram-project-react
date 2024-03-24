@@ -1,7 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 from django.db import models
-from users.constants import Limit
+
+from users import constants
 
 
 class User(AbstractUser):
@@ -14,7 +15,7 @@ class User(AbstractUser):
 
     username = models.CharField(
         "Имя пользователя",
-        max_length=Limit.CHAR_LIMIT_USER_USERNAME,
+        max_length=constants.CHAR_LIMIT_USER_USERNAME,
         blank=False,
         unique=True,
         validators=[RegexValidator(
@@ -26,23 +27,23 @@ class User(AbstractUser):
     )
     email = models.EmailField(
         "Эл. почта",
-        max_length=Limit.CHAR_LIMIT_USER_EMAIL,
+        max_length=constants.CHAR_LIMIT_USER_EMAIL,
         blank=False,
         unique=True,
     )
     first_name = models.CharField(
         "Имя",
-        max_length=Limit.CHAR_LIMIT_USER_FIRST_NAME,
+        max_length=constants.CHAR_LIMIT_USER_FIRST_NAME,
         blank=False,
     )
     last_name = models.CharField(
         "Фамилия",
-        max_length=Limit.CHAR_LIMIT_USER_LAST_NAME,
+        max_length=constants.CHAR_LIMIT_USER_LAST_NAME,
         blank=False,
     )
     password = models.CharField(
         "Пароль",
-        max_length=Limit.CHAR_LIMIT_USER_PASSWORD,
+        max_length=constants.CHAR_LIMIT_USER_PASSWORD,
         blank=False,
     )
 
@@ -52,7 +53,7 @@ class User(AbstractUser):
         verbose_name_plural = "Пользователи"
 
     def __str__(self):
-        return self.username[:Limit.VISUAL_CHAR]
+        return self.username[:constants.VISUAL_CHAR]
 
 
 class Follow(models.Model):
@@ -78,5 +79,5 @@ class Follow(models.Model):
         verbose_name_plural = "Подписки"
 
     def __str__(self):
-        return (f"{self.user.username[:Limit.VISUAL_CHAR]} подписан на "
-                f"{self.author.username[:Limit.VISUAL_CHAR]}")
+        return (f"{self.user.username[:constants.VISUAL_CHAR]} подписан на "
+                f"{self.author.username[:constants.VISUAL_CHAR]}")

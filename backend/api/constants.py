@@ -1,5 +1,4 @@
-class Limit:
-    """Настройка констант api"""
+"""Настройка констант api"""
 
-    # Пагинация
-    PAGINATION_PAGE_SIZE = 6
+# Пагинация
+PAGINATION_PAGE_SIZE = 6

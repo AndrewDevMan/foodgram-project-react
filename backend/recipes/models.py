@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
-from recipes.constants import Limit
+
+from recipes import constants
 
 User = get_user_model()
 
@@ -19,17 +20,17 @@ class Tag(models.Model):
     name = models.CharField(
         "Название",
         unique=True,
-        max_length=Limit.CHAR_LIMIT_TAG_NAME,
+        max_length=constants.CHAR_LIMIT_TAG_NAME,
     )
     slug = models.SlugField(
         "Слаг",
         unique=True,
-        max_length=Limit.CHAR_LIMIT_TAG_SLUG_NAME,
+        max_length=constants.CHAR_LIMIT_TAG_SLUG_NAME,
     )
     color = models.CharField(
         "Цвет в HEX",
         help_text="Пример: #A7F300",
-        max_length=Limit.CHAR_LIMIT_TAG_HEX_COLOR,
+        max_length=constants.CHAR_LIMIT_TAG_HEX_COLOR,
         validators=[RegexValidator(
             regex=r"^#[A-Fa-f0-9]{6}$",
             message="Цвет надо указывать в HEX формате",
@@ -43,17 +44,17 @@ class Tag(models.Model):
         verbose_name_plural = "Теги"
 
     def __str__(self):
-        return self.name[:Limit.VISUAL_CHAR]
+        return self.name[:constants.VISUAL_CHAR]
 
 
 class Ingredient(models.Model):
     name = models.CharField(
         "Название",
-        max_length=Limit.CHAR_LIMIT_INGREDIENT_NAME,
+        max_length=constants.CHAR_LIMIT_INGREDIENT_NAME,
     )
     measurement_unit = models.CharField(
         "Еденица измерения",
-        max_length=Limit.CHAR_LIMIT_INGREDIENT_MEASUREMENT_UNIT,
+        max_length=constants.CHAR_LIMIT_INGREDIENT_MEASUREMENT_UNIT,
     )
 
     class Meta(BaseMetaModel.Meta):
@@ -61,8 +62,8 @@ class Ingredient(models.Model):
         verbose_name_plural = "Ингредиенты"
 
     def __str__(self):
-        return (f"{self.name[:Limit.VISUAL_CHAR]},"
-                f"{self.measurement_unit[:Limit.VISUAL_CHAR]}")
+        return (f"{self.name[:constants.VISUAL_CHAR]},"
+                f"{self.measurement_unit[:constants.VISUAL_CHAR]}")
 
 
 class Recipe(models.Model):
@@ -74,7 +75,7 @@ class Recipe(models.Model):
     )
     name = models.CharField(
         "Название рецепта",
-        max_length=Limit.CHAR_LIMIT_RECIPE_NAME,
+        max_length=constants.CHAR_LIMIT_RECIPE_NAME,
     )
     image = models.ImageField(
         "Изображение рецепта",
@@ -94,9 +95,9 @@ class Recipe(models.Model):
     cooking_time = models.PositiveSmallIntegerField(
         "Время готовки, мин.",
         validators=[MinValueValidator(
-            limit_value=Limit.MIN_VALUE_RECIPE_TIME_COOKING,
+            limit_value=constants.MIN_VALUE_RECIPE_TIME_COOKING,
             message=f"Вы не можете указать меньше "
-                    f"{Limit.MIN_VALUE_RECIPE_TIME_COOKING} мин.",
+                    f"{constants.MIN_VALUE_RECIPE_TIME_COOKING} мин.",
         )]
     )
 
@@ -106,7 +107,7 @@ class Recipe(models.Model):
         verbose_name_plural = "Рецепты"
 
     def __str__(self):
-        return self.name[:Limit.VISUAL_CHAR]
+        return self.name[:constants.VISUAL_CHAR]
 
 
 class RecipeIngredient(models.Model):
@@ -125,9 +126,9 @@ class RecipeIngredient(models.Model):
     amount = models.PositiveSmallIntegerField(
         "Колличество",
         validators=[MinValueValidator(
-            limit_value=Limit.MIN_VALUE_RECIPEINGREDIENT_AMOUNT,
+            limit_value=constants.MIN_VALUE_RECIPEINGREDIENT_AMOUNT,
             message=f"Вы не можете указать меньше "
-                    f"{Limit.MIN_VALUE_RECIPEINGREDIENT_AMOUNT}.",
+                    f"{constants.MIN_VALUE_RECIPEINGREDIENT_AMOUNT}.",
         )]
     )
 
@@ -138,8 +139,8 @@ class RecipeIngredient(models.Model):
 
     def __str__(self):
         return (
-            f"{self.ingredient.name[:Limit.VISUAL_CHAR]} "
-            f"{self.ingredient.measurement_unit[:Limit.VISUAL_CHAR]} "
+            f"{self.ingredient.name[:constants.VISUAL_CHAR]} "
+            f"{self.ingredient.measurement_unit[:constants.VISUAL_CHAR]} "
             f"- {self.amount}"
         )
 
@@ -166,7 +167,8 @@ class Favorite(models.Model):
             )]
 
     def __str__(self):
-        return f"{self.recipe} добавил в избранное {self.user}"
+        return (f"{self.recipe[:constants.VISUAL_CHAR]} добавил в избранное "
+                f"{self.user[:constants.VISUAL_CHAR]}")
 
 
 class ShoppingList(models.Model):
@@ -191,4 +193,5 @@ class ShoppingList(models.Model):
             )]
 
     def __str__(self):
-        return f"{self.recipe} добавил в избранное {self.user}"
+        return (f"{self.recipe[:constants.VISUAL_CHAR]} добавил в покупки "
+                f"{self.user[:constants.VISUAL_CHAR]}")
